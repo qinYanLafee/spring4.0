@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    <!-- Class.forName("com.spring.User").newInstance() -->
+    <bean id="user" class="com.spring.User">
+    	<property name="id" value="1000"></property>
+    	<property name="name" >
+    		<value>张飞</value>
+    	</property>
+    	<property name="password" value="1000"></property>
+    	<property name="age" value="88"></property>
+    	<!-- <property name="address" ref="address" ></property> -->
+    	<property name="address">
+			<ref bean="address"/>
+    	</property> 
+    	<property name="accounts">
+    		<list>
+    			<ref bean="account"/>
+    			<ref bean="account1"/>
+    		</list>
+    	</property>
+    </bean>  
+    
+    <bean id="address" class="com.spring.Address">
+    	<property name="id" value="1"></property>
+    	<property name="province" value="湖南省"></property>
+    	<property name="city" value="长沙市"></property>
+    </bean>
+     
+    <bean id="account" class="com.spring.Account">
+    	<property name="id" value="1"></property>
+    	<property name="money" value="2000.1"></property>
+    </bean>
+    <bean id="account1" class="com.spring.Account">
+    	<property name="id" value="2"></property>
+    	<property name="money" value="3000.1"></property>
+    </bean>
+    
+    <!-- 配置資源文件的路徑'
+       PropertySourcesPlaceholderConfigurer 自動加載資源文件
+    -->
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		 <property name="locations">
+		 		<array>
+		 			<value>classpath:db.properties</value>
+		 		</array>
+		 </property>
+	</bean>
+    
+    <!-- 配置数据源连接数据库 -->
+    <bean id="pro" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    	<property name="properties">
+    		<props>
+    			<prop key="driverClass">${driverClass}</prop>
+    			<prop key="jdbcUrl">${jdbcUrl}</prop>
+    			<prop key="user">${user}</prop>
+    			<prop key="password">${password}</prop>
+    		</props>
+    	</property>
+    </bean>
+    
+</beans>

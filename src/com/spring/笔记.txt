@@ -1,0 +1,305 @@
+Spring
+  1.简介
+     a.开源框架
+     b.简化企业级开发应运而生的。 代替EJB
+     c.IOC(DI) AOP
+  2.特点:
+     a.轻量级的框架  不需要实现SpringAPI 或者接口 
+     b.依赖注入
+     c.AOP(面向切面编程)
+     d.容器:它创建对象并且管理对象的生命周期
+     e.一站式的框架: spring可以整合第三方框架
+       ssh(Struts2+Spring+Hibernate)
+       ssm(SpringMVC+Spring+Mybatis)
+  3.Spring体系结构
+  
+  
+  4.搭建开发环境
+    a.导入jar包
+      spring-beans.jar
+      spring-core.jar
+      spring-context.jar
+      spring-expression.jar
+      commons-logging.jar
+    b.创建Spring配置文件
+             路径:随意
+             名字: 随意   默认:applicationContext.xml
+             内容:xml头信息     
+    c.创建一个实体类  
+    
+    d.测试类
+    
+  5.IOC 和DI  
+     IOC:Inversion of Control 控制反转
+             传统对象获取方式: 发送请求后,才能获取资源。
+              控制反转: 1.主动权转交给容器 2.容器自动将对象转配目标位置 
+     DI:Dependency Injection 依赖注入
+     	  按照预先定义好的规则接收来自于容器的资源。
+    IOC或DI发展历程
+          面向接口编程 ---> 简单工厂设计模式 ----> IOC (1.建立关系 2.创建对象)
+    
+  6.Spring容器
+      a)Spring容器:保存到bean对象。
+      b)bean对象的创建过程:
+                  当程序启动时,对Spring容器进行初始化，同时创建Bean对象。然后才可以通过容器
+              获得对象
+      c)Spring IOC 实现方式
+           BeanFactory：IOC的基本实现   底层实现
+           ApplicationContext: 提供了更多的高级特性。是BeanFactory子接口
+             |-ConfigurableApplicationContext 提供了refresh close 启动 刷新 关闭容器
+	              |-ClassPathXmlApplicationContext 从类路径中加载配置文件
+	              |-FileSystemXmlApplicationContext 从文件系统下加载配置文件
+	              |-WebApplicationContext 框架整合 web应用
+         
+  7.配置bean 
+    a)方式： 1)基于xml 2)基于注解
+    b)配置方式
+       1)通过反射机制实现
+          a)通过配置类的全限定名  使用反射机制创建对象
+	          <bean id="user" class="com.spring.User"></bean>
+	          id:唯一标识
+	          class:全限定名
+	      b)获取对象方式
+	              通过id  Object getBean(String id)
+	              通过type  Obejct getBean(Class cls)
+	        注意: 1)通过id获取 配置文件中id必须唯一
+	         2)通过类型获取 配置文件中该类型只能定义一个bean   
+	       
+       2)通过工厂方法
+          a)通过静态工厂实现
+            <bean id="staticFactory" class="com.spring.staticfactory.StaticFactory"
+    		factory-method="getUser">
+    		<constructor-arg value="tom"></constructor-arg>
+    	   </bean>
+          b)实例工厂
+            <!-- 实例化工厂 -->
+			  <bean id="userFactory" class="com.spring.instancefacotry.InstanceFactory">
+			  </bean>
+			 <!-- 创建user对象 -->
+			 <bean id="user" factory-bean="userFactory" factory-method="getUser">
+			  	<constructor-arg value="tom"></constructor-arg>
+			 </bean>
+       3)FactoryBean实现
+                   开发步骤：
+          1.实现接口 FactoryBean接口
+             User getObject() 获取对象的方法
+             Class<?> getObjectType()获取对象的类型
+             boolean isSingleton()是否返回单例对象
+          2.配置文件
+           <bean id="user" class="com.spring.beanfactory.MyFactoryBean">
+    		<property name="age" value="10"></property>
+    	    </bean>
+          3.在实现类中为注入的属性提供getter setter方法
+           
+                    
+  8.IOC注入的方式
+    A)注入方式: 属性注入(setter/getter) 构造器注入  工厂注入(不推荐)
+    B)属性注入(setter/getter)
+      1)property标签
+         <property name="" value=""/>
+         name:属性名 
+         value:属性值
+      2)property 和value标签
+         <property name="name" >
+    		<value>张飞</value>
+    	</property>
+      3)property标签,ref属性 连接对象类型
+        <property name="address" ref="address" >
+        </property>
+        name:属性名
+        ref:bean的id
+      4)property标签,ref标签 连接对象类型
+        <property name="address">
+			<ref bean="address"/>
+    	</property>
+        name:属性名
+        ref:bean的id
+        
+    总结: 1) 2)注入的简单数据类型  
+       3) 4)注入引用类型    
+      
+     5)数组 集合 Map Properties注入
+       List集合 list标签
+         <property name="accounts">
+    		<list>
+    			<ref bean="account"/>
+    			<ref bean="account1"/>
+    		</list>
+    	</property>
+       Map集合  map标签
+          <map>
+			<entry>
+				<key></key>
+				<value></value>
+			</entry>
+    	 </map>
+      Properties 配置资源 
+         <props>
+    			<prop key="driverClass">${driverClass}</prop>
+    			<prop key="jdbcUrl">${jdbcUrl}</prop>
+    			<prop key="user">${user}</prop>
+    			<prop key="password">${password}</prop>
+    		</props>
+    C)构造器注入
+       1)constructor-arg 标签
+        a)默认的:<constructor-arg value="1" ></constructor-arg>
+        b)指定位置
+         <constructor-arg value="1" index="2"></constructor-arg>
+         	value:值
+         	index:位置
+        c)按照构造器类型
+          	<constructor-arg value="1" type="int"></constructor-arg>
+       2)注入引用类型
+         <constructor-arg ref="address"></constructor-arg>
+       3)注入集合类型
+                    第一种:
+             <list>
+     		   <ref bean="account"/>
+     		    <ref bean="account1"/>
+     		 </list> 
+                   第二种:定义一个外部list
+                    外部list:定义
+          <util:list id="list">
+			<list>
+			   <ref bean="account"/>
+	    	   <ref bean="account1"/>
+			</list>
+		  </util:list>
+                   外部list引用
+          <constructor-arg name="accounts" ref="list">
+    D)补充知识点
+                使用p标签啊实现属性的注入
+        <bean id="user" class="com.spring.User"
+     		p:id="1" p:name="jack" p:password="123"
+     		p:age="20" p:address-ref="address">
+     	</bean>
+    	<bean id="address" class="com.spring.Address" 
+   		  p:id="1" p:province="湖南" p:city="长沙">
+   		</bean> 
+   9.自动装配
+          可以使用AutoWire实现属性自动装配  注解中  xml ref=""引用
+    	 byName:根据bean的id和bean的setter方法进行自动装配 如果有匹配的进行装配
+    	        如果没有匹配 就不装配
+    	 byType 根据bean的类型 和当前bean的属性类型进行装配 如果IOC中有1个以上的类型
+    	 匹配 则抛异常 
+	    <bean id="user" class="com.spring.User"
+	     		p:id="1" p:name="jack" p:password="123"
+	     		p:age="20" autowire="byType">
+	     </bean> 
+	 总结: 缺点：1)使用自动装配 所有的属性都必须使用自动装配
+	          2)如果使用自动装配只能按照byType 或byName装配。   
+           
+    10.Bean的作用域
+       1)作用域: singleton 单例  只能有一个对象  默认
+                prototype 原型   每次向容器中获取对象 容器都将返回一个新的对象
+                          web环境 
+       2)实现方式bean标签中
+         scope的值 singleton
+                  prototype  
+    11.使用外部资源文件
+      A.主要应用:将配置文件的信息和spring的配置分离。 
+      B.案例：
+         a)导入jar  
+            c3p0-0.9.5.2.jar 数据连接池    
+            mchange-commons-java-0.2.11.jar 依赖
+            ojdbc5.jar 数据库驱动
+         b)创建资源文件 
+         
+         c.加入配置信息  
+             1)指定资源文件的路径
+            <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+				 <property name="locations">
+				 		<array>
+				 			<value>classpath:com/spring/resource/db.properties</value>
+				 		</array>
+				 </property>
+			</bean>
+            2)使用表达式获取资源文件中的信息
+		    <bean id="pro" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		    	<property name="properties">
+		    		<props>
+		    			<prop key="driverClass">${driverClass}</prop>
+		    			<prop key="jdbcUrl">${jdbcUrl}</prop>
+		    			<prop key="user">${user}</prop>
+		    			<prop key="password">${password}</prop>
+		    		</props>
+		    	</property>
+		    </bean>
+    12.IOC中Bean的生命周期
+       a.Bean的生命周期
+         1)通过构造器或工厂方法创建bean实例
+         2)为bean的属性设置值和对其他bean的引用     
+         3)调用Bean的初始化方法
+         4)当容器关闭时,调用bean的销毁方法
+       b.在bean注入Spring中可以为其设置init-method 和destory-method
+          <bean id="user" class="com.spring.bean.User"
+     		p:id="1" p:name="jack" init-method="A" destroy-method="B">
+         </bean>
+    
+       c.后置处理Bean 当对象被创建之后还可以被修改
+                     开发步骤:
+             1.实现接口BeanPostProcessor 并实现对应的方法
+               Object postProcessBeforeInitialization(Object bean, String beanName)
+               	构造方法之后,init方法之前
+	            	 bean:创建的对象
+	            beanName: id
+               Object postProcessAfterInitialization(Object bean, String beanName)
+                 init方法之后  对象方法调用之前。
+             2.配置文件  
+              <bean class="com.spring.bean.MyBaenPostProcessor"></bean>
+     
+     13.Spring的注解
+       1.注解实现Bean注入
+         @Component 基本注解 标识一个受spring容器管理组件
+         @Respository 标识持久化(ORM)组件
+         @Service标识服务器层组件
+         @Controller标识表示层组件
+              注意:以上注解框架无法区分具体的功能，可以混用。
+       2.使用注解Bean注入的步骤
+        a)在对应JavaBean上添加注解
+        
+        
+        b)spring中配置IOC的扫描的包<context:component-scan>
+          	第一种: base-package:指定的包
+          	 <context:component-scan base-package="com.spring.annotation">
+   			 </context:component-scan>
+                         第二种:指定扫描的包, 然后在执行扫描资源表达式
+              <context:component-scan base-package="com.spring"
+   				resource-pattern="annotation/*.class">
+   			 </context:component-scan>           
+        c)扫描指定包 但是只过滤Component注解   
+	             注意: use-default-filters false 默认的过滤条件失效 过滤注解 注解类型是Component
+	       <context:component-scan base-package="com.spring" 
+	            use-default-filters="false">
+	    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+	       </context:component-scan>
+        d)扫描指定的包 但是排除Component注解 
+		    <context:component-scan base-package="com.spring" 
+		            use-default-filters="false">
+		    	<context:exclude-filter type="annotation" 
+		    			expression="org.springframework.stereotype.Component"/>
+		   </context:component-scan>             
+       3.属性值注入:
+          @Autowired @Resource @Inject 注解属性  自动装配
+         @Autowired自动装配      @Qualifier用来解决命名不一致。
+         a)修饰属性
+           @Autowired
+           @Qualifier("user") 引用
+           private User u;
+          
+         b)修饰方法
+           @Autowired
+           @Qualifier("user") 引用
+           public void setUser(User user){
+              this.user = user;
+           }	
+         c)修饰形参
+           @Autowired
+           public void setUser(@Qualifier("user") User user){
+              this.user = user;
+           }
+         注意: 1.@Autowire注解修饰数组、集合、Map
+         
+         
+         
+         

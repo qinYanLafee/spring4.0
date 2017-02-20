@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- 扫描com.spring.annotation 下面包含的类 -->
+    <!-- <context:component-scan base-package="com.spring.annotation">
+   </context:component-scan>
+     -->
+    
+    <!-- 扫描com.spring包  annotation下面所有class -->
+    <!-- 注意:base-package:其中可以配置多个包  包之间使用逗号隔开 -->
+  <!--  <context:component-scan base-package="com.spring"
+   	resource-pattern="annotation/*.class">
+   </context:component-scan>
+    -->
+   <!--扫描指定包 但是只过滤Compoent注解   
+             注意: use-default-filters false 默认的过滤条件失效 --> 
+    <!-- 过滤注解  注解类型是Component -->
+   <!--  <context:component-scan base-package="com.spring" 
+            use-default-filters="false">
+    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+    </context:component-scan>
+    -->
+    
+    <!-- 扫描指定的包 但是排除Component注解 -->
+    <context:component-scan base-package="com.spring" 
+            use-default-filters="false">
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+    </context:component-scan>
+    
+</beans>
+

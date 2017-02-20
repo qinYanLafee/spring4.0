@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    <bean id="user" class="com.spring.User">
+    	<constructor-arg value="1" index="2"></constructor-arg>
+    	<constructor-arg value="jack" index="1"></constructor-arg>
+    	<constructor-arg value="123"  index="0"></constructor-arg>
+    	<constructor-arg value="20" index="3"></constructor-arg>
+    </bean>  
+    
+     <bean id="user1" class="com.spring.User">
+     	<constructor-arg name="id" value="1" type="int"></constructor-arg>
+     	<constructor-arg name="name" value="tom" type="java.lang.String"></constructor-arg>
+     	<constructor-arg name="password" value="123" type="java.lang.String"></constructor-arg>
+     	<constructor-arg name="age" value="20" type="int"></constructor-arg>
+     	<constructor-arg ref="address"></constructor-arg>
+     	<constructor-arg name="accounts" ref="list">
+     		<!--  <list>
+     			 <ref bean="account"/>
+     		 	<ref bean="account1"/>
+     		</list>-->
+     	</constructor-arg>
+    </bean>  
+    
+    <!-- 定义外部list -->
+	<util:list id="list">
+		<list>
+		   <ref bean="account"/>
+    	   <ref bean="account1"/>
+		</list>
+	</util:list>
+	
+    
+     <bean id="account" class="com.spring.Account">
+    	<property name="id" value="1"></property>
+    	<property name="money" value="2000.1"></property>
+    </bean>
+    <bean id="account1" class="com.spring.Account">
+    	<property name="id" value="2"></property>
+    	<property name="money" value="3000.1"></property>
+    </bean>
+    <bean id="address" class="com.spring.address">
+    </bean>
+    
+</beans>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    
+    <!-- 配置資源文件的路徑'
+       PropertySourcesPlaceholderConfigurer 自動加載資源文件
+    -->
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		 <property name="locations">
+		 		<array>
+		 			<value>classpath:com/spring/resource/db.properties</value>
+		 		</array>
+		 </property>
+	</bean>
+    
+    <!-- 配置数据源连接数据库 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="properties">
+    		<props>
+    			<prop key="driverClass">${driverClass}</prop>
+    			<prop key="jdbcUrl">${jdbcUrl}</prop>
+    			<prop key="user">${user}</prop>
+    			<prop key="password">${password}</prop>
+    		</props>
+    	</property>
+    </bean>
+    
+</beans>

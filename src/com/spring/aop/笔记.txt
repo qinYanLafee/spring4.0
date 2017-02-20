@@ -1,0 +1,61 @@
+Spring AOP
+  1.代理设计模式
+        代理设计模式:完成某个任务，将任务中的非核心功能委托给它人完成,协助完成当前任务.
+        静态代理: 代理对象和被代理对象之间关系 1:1
+        动态代理: 代理对象和被代理对象之间关系 1:n
+  2.AOP
+    1)AOP: Aspect-Oriented Programming 面向切面编程
+         一种编程思想,对传统OOP一个补充。
+              切面(aspect):多个切点组成的。
+    2)AOP
+       1)更多的注重业务逻辑 避免其他代码混入。 业务模块更加简洁
+       2)将功能聚集起来,方便代码的维护和升级
+    3)AOP概念
+            切面Aspect: 横切关注点(跨越应用程序多个功能)被模块化的特殊对象
+            通知Advice: 切面必须完成的功能
+            目标Target: 被通知的对象
+            代理Proxy:  向目标对象应用通知之后创建对象 
+            连接点(JoinPoint): 程序执行的某个特定位置
+            切点(pointcut): 每个类都拥有多个连接点。AOP通过切点定位到特定连接点
+                  连接点:相当于数据库中的记录
+                  切点相当于查询条件       
+             注意:切点和连接点之间不是一对一关系  一个切点可以匹配多个连接点
+  3.Spring AOP实现
+     a)AspectJ:完整 流行 AOP框架
+     b)AspectJ实现方式: 基于注解   XML
+     c)AspectJ注解
+          1)开发步骤: 导入jar包
+            aspectjweaver-1.8.9.jar
+            aopalliance.jar
+          2)创建切面类 定义指定的方法
+          
+          
+          3)加入注解   
+             a)注入到Spring容器中 @Component   目标类 切面类
+             b)在切面中加入指定的注解和目标方法表达式
+                              类:@Aspect 指定当前类是切面
+                             方法:(切面中的方法)
+                @Before前置通知  在方法执行之前
+                @After后置通知  在方法执行之后
+                @AfterReturning 在方法正常结束执行代码 返回通知可以访问方法的返回值
+                @AfterThrowing 在目标方法出现异常之后会执行的代码 可以访问到异常对象
+                                                      且可以指定出现特定异常执行的通知代码
+                @Around 循环通知           
+                       注解中的参数：
+                value: 执行目标方法表达式
+                argNames:参数名字
+              @AfterThrowing
+              	 throwing: 记录异常信息
+              @AfterReturning
+                 returning:可以访问方法的返回值
+              
+          4)spring配置文件
+             <!-- 扫描指定的包 但是排除Component注解 -->
+		    <context:component-scan base-package="com.spring.aop">
+		    </context:component-scan>
+    
+		    <!-- 使用Aspectj注解起作用:自动为其生成代理对象 -->
+		    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+                  
+             
+  
